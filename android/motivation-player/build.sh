@@ -13,8 +13,7 @@ javac -source 8 -target 8 -bootclasspath "$android_jar" -d "$build/classes" \
   "$base/src/ar/com/flowbox/motivation/MainActivity.java" \
   "$base/src/ar/com/flowbox/motivation/VideoProvider.java"
 "$tools/d8" --min-api 26 --lib "$android_jar" --output "$build/dex" \
-  "$build/classes/ar/com/flowbox/motivation/MainActivity.class" \
-  "$build/classes/ar/com/flowbox/motivation/VideoProvider.class"
+  "$build/classes/ar/com/flowbox/motivation/"*.class
 (cd "$build/dex" && "$tools/aapt" add "$build/base.apk" classes.dex)
 "$tools/zipalign" -f 4 "$build/base.apk" "$build/aligned.apk"
 
