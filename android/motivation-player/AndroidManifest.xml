@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="ar.com.flowbox.motivation">
+  <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="29" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-feature android:name="android.software.leanback" android:required="false" />
+  <application android:label="Video sorpresa" android:theme="@android:style/Theme.Material.NoActionBar" android:usesCleartextTraffic="false" android:requestLegacyExternalStorage="true">
+    <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="landscape">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="motivacion" android:host="azar" />
+      </intent-filter>
+    </activity>
+    <provider android:name=".VideoProvider" android:authorities="ar.com.flowbox.motivation.files" android:exported="false" android:grantUriPermissions="true" />
+  </application>
+</manifest>
