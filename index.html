@@ -61,21 +61,23 @@
       .action { min-height: 38px; padding: 7px 12px; border-radius: 10px; font-size: 14px; }
       main { min-height: 0; gap: 14px; }
       .card { min-height: 0; padding: 18px; border-radius: 18px; }
+      .card:first-child { display: flex; flex-direction: column; justify-content: space-between; }
       .section-title { font-size: 18px; }
-      .weather-main { gap: 14px; margin-top: 10px; }
+      .weather-main { gap: 14px; margin-top: 0; }
       .temperature { font-size: 76px; }
       .conditions { font-size: 22px; }
       .feels { margin-top: 4px; font-size: 15px; }
-      .weather-meta { gap: 16px; margin-top: 14px; padding-top: 12px; font-size: 15px; }
-      .forecast { gap: 6px; margin-top: 14px; }
+      .weather-meta { gap: 16px; margin-top: 0; padding-top: 12px; font-size: 15px; }
+      .forecast { gap: 6px; margin-top: 0; }
       .day { padding: 10px; border-radius: 10px; }
       .day-name { font-size: 13px; }
       .day-temp { margin-top: 5px; font-size: 18px; }
-      .status { min-height: 16px; margin-top: 8px; font-size: 11px; }
-      .clock-list { gap: 9px; margin-top: 13px; }
-      .clock { min-height: 70px; gap: 10px; padding: 10px 12px; border-radius: 12px; }
-      .clock-labels span { padding: 4px 7px; font-size: 13px; }
-      .clock-time { font-size: 36px; }
+      .status { min-height: 16px; margin-top: 0; font-size: 11px; }
+      .clocks > div { display: flex; flex: 1; flex-direction: column; }
+      .clock-list { flex: 1; justify-content: space-evenly; gap: 9px; margin-top: 0; }
+      .clock { min-height: 82px; gap: 10px; padding: 10px 12px; border-radius: 12px; }
+      .clock-labels span { padding: 4px 7px; font-size: 14px; }
+      .clock-time { font-size: 42px; }
       .hint { font-size: 12px; }
     }
     @media (max-width: 720px) { main { grid-template-columns: 1fr; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
