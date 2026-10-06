@@ -52,7 +52,33 @@
     .results { display: grid; gap: 8px; margin-top: 16px; max-height: 330px; overflow-y: auto; }
     .city-result { text-align: left; color: white; background: #205061; border: 1px solid #487281; border-radius: 12px; padding: 13px 16px; font-size: 19px; }
     .dialog-actions { display: flex; justify-content: flex-end; margin-top: 22px; }
-    @media (max-width: 1100px) { main { grid-template-columns: 1fr; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
+    @media (min-width: 721px) and (max-height: 700px) {
+      .shell { height: 100vh; min-height: 0; padding: 18px 22px; gap: 14px; }
+      header { align-items: center; }
+      .eyebrow { margin-bottom: 3px; font-size: 13px; }
+      h1 { font-size: 43px; }
+      .date { margin-top: 4px; font-size: 17px; }
+      .action { min-height: 38px; padding: 7px 12px; border-radius: 10px; font-size: 14px; }
+      main { min-height: 0; gap: 14px; }
+      .card { min-height: 0; padding: 18px; border-radius: 18px; }
+      .section-title { font-size: 18px; }
+      .weather-main { gap: 14px; margin-top: 10px; }
+      .temperature { font-size: 76px; }
+      .conditions { font-size: 22px; }
+      .feels { margin-top: 4px; font-size: 15px; }
+      .weather-meta { gap: 16px; margin-top: 14px; padding-top: 12px; font-size: 15px; }
+      .forecast { gap: 6px; margin-top: 14px; }
+      .day { padding: 10px; border-radius: 10px; }
+      .day-name { font-size: 13px; }
+      .day-temp { margin-top: 5px; font-size: 18px; }
+      .status { min-height: 16px; margin-top: 8px; font-size: 11px; }
+      .clock-list { gap: 9px; margin-top: 13px; }
+      .clock { min-height: 70px; gap: 10px; padding: 10px 12px; border-radius: 12px; }
+      .clock-labels span { padding: 4px 7px; font-size: 13px; }
+      .clock-time { font-size: 36px; }
+      .hint { font-size: 12px; }
+    }
+    @media (max-width: 720px) { main { grid-template-columns: 1fr; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
     @media (max-width: 650px) { header { flex-direction: column; } .actions { justify-content: flex-start; } .weather-main { flex-direction: column; align-items: flex-start; gap: 4px; } .clock { align-items: flex-start; flex-direction: column; } .forecast { grid-template-columns: 1fr 1fr 1fr; } }
   </style>
 </head>
