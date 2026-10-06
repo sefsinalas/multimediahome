@@ -193,7 +193,7 @@
           const symbol=document.createElement('span'); symbol.className='day-symbol'; symbol.textContent=weatherSymbol(data.daily.weather_code[index]);
           const rain=document.createElement('span');
           const chance=data.daily.precipitation_probability_max?.[index];
-          rain.textContent=chance == null ? 'Lluvia —' : `Lluvia ${Math.round(chance)}%`;
+          rain.textContent=chance == null ? 'Precip. —' : `Precip. ${Math.round(chance)}%`;
           middle.append(symbol,rain);
           const temp=document.createElement('div'); temp.className='day-temp'; temp.textContent=`${Math.round(data.daily.temperature_2m_max[index])}° / ${Math.round(data.daily.temperature_2m_min[index])}°`;
           day.title=weatherNames[data.daily.weather_code[index]] || 'Estado variable';
