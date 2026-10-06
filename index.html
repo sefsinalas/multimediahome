@@ -32,10 +32,14 @@
     .weather-meta { display: flex; gap: clamp(20px, 2.5vw, 52px); flex-wrap: wrap; border-top: 1px solid #385767; margin-top: 36px; padding-top: 30px; font-size: clamp(19px, 1.4vw, 27px); }
     .weather-meta strong { font-weight: 650; color: #f7f9f8; }
     .weather-meta span { color: #bdd0d3; }
-    .forecast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 36px; }
-    .day { border-radius: 18px; background: #193b49; padding: 18px; min-width: 0; }
-    .day-name { color: #a9c7cc; font-size: clamp(16px, 1.2vw, 22px); }
-    .day-temp { margin-top: 10px; font-size: clamp(23px, 2vw, 38px); font-weight: 650; }
+    .forecast-card { grid-column: 1 / -1; }
+    .forecast-title { margin: 0 0 12px; color: #a6c5cb; font-size: clamp(18px, 1.2vw, 23px); font-weight: 600; }
+    .forecast { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .day { border-radius: 14px; background: #193b49; padding: 12px; min-width: 0; }
+    .day-name { color: #a9c7cc; font-size: clamp(15px, 1vw, 19px); text-transform: capitalize; }
+    .day-middle { display: flex; align-items: center; gap: 5px; margin-top: 6px; color: #c1dadf; font-size: clamp(13px, .9vw, 17px); white-space: nowrap; }
+    .day-symbol { color: #95e0d2; font-size: 1.25em; line-height: 1; }
+    .day-temp { margin-top: 5px; font-size: clamp(18px, 1.4vw, 27px); font-weight: 650; white-space: nowrap; }
     .clocks { display: flex; flex-direction: column; gap: 18px; }
     .clock-list { display: flex; flex-direction: column; gap: 14px; margin-top: 26px; }
     .clock { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 24px; border-radius: 20px; background: #173744; min-height: 105px; }
@@ -61,27 +65,31 @@
       .action { min-height: 38px; padding: 7px 12px; border-radius: 10px; font-size: 14px; }
       main { min-height: 0; gap: 14px; }
       .card { min-height: 0; padding: 18px; border-radius: 18px; }
+      main { grid-template-rows: minmax(0, .49fr) minmax(0, .51fr); }
       .card:first-child { display: flex; flex-direction: column; justify-content: space-between; }
       .section-title { font-size: 18px; }
       .weather-main { gap: 14px; margin-top: 0; }
-      .temperature { font-size: 76px; }
+      .temperature { font-size: 65px; }
       .conditions { font-size: 22px; }
       .feels { margin-top: 4px; font-size: 15px; }
-      .weather-meta { gap: 16px; margin-top: 0; padding-top: 12px; font-size: 15px; }
-      .forecast { gap: 6px; margin-top: 0; }
-      .day { padding: 10px; border-radius: 10px; }
+      .weather-meta { gap: 16px; margin-top: 0; padding-top: 8px; font-size: 15px; }
+      .forecast-card { display: flex; flex-direction: column; }
+      .forecast-title { margin-bottom: 6px; font-size: 15px; }
+      .forecast { flex: 1; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 5px; }
+      .day { display: flex; flex-direction: column; justify-content: space-between; padding: 7px 10px; border-radius: 9px; }
       .day-name { font-size: 13px; }
-      .day-temp { margin-top: 5px; font-size: 18px; }
+      .day-middle { gap: 4px; margin-top: 0; font-size: 12px; }
+      .day-temp { margin-top: 0; font-size: 18px; }
       .status { min-height: 16px; margin-top: 0; font-size: 11px; }
       .clocks > div { display: flex; flex: 1; flex-direction: column; }
-      .clock-list { flex: 1; justify-content: space-evenly; gap: 9px; margin-top: 0; }
-      .clock { min-height: 82px; gap: 10px; padding: 10px 12px; border-radius: 12px; }
+      .clock-list { flex: 1; justify-content: space-between; gap: 6px; margin-top: 8px; }
+      .clock { min-height: 0; gap: 10px; padding: 8px 12px; border-radius: 12px; }
       .clock-labels span { padding: 4px 7px; font-size: 14px; }
       .clock-time { font-size: 42px; }
-      .hint { font-size: 12px; }
+      .hint { display: none; }
     }
-    @media (max-width: 720px) { main { grid-template-columns: 1fr; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
-    @media (max-width: 650px) { header { flex-direction: column; } .actions { justify-content: flex-start; } .weather-main { flex-direction: column; align-items: flex-start; gap: 4px; } .clock { align-items: flex-start; flex-direction: column; } .forecast { grid-template-columns: 1fr 1fr 1fr; } }
+    @media (max-width: 720px) { main { grid-template-columns: 1fr; } .forecast-card { grid-column: 1; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
+    @media (max-width: 650px) { header { flex-direction: column; } .actions { justify-content: flex-start; } .weather-main { flex-direction: column; align-items: flex-start; gap: 4px; } .clock { align-items: flex-start; flex-direction: column; } .forecast { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   </style>
 </head>
 <body>
@@ -108,7 +116,6 @@
           </div>
         </div>
         <div class="weather-meta" id="weather-meta"></div>
-        <div class="forecast" id="forecast"></div>
         <div class="status" id="status" role="status"></div>
       </section>
       <section class="card clocks" aria-labelledby="clocks-heading">
@@ -117,6 +124,10 @@
           <div class="clock-list" id="clock-list"></div>
         </div>
         <p class="hint">Cancún y EST comparten reloj. Pulsá Home en el control para abrir tus aplicaciones.</p>
+      </section>
+      <section class="card forecast-card" aria-labelledby="forecast-heading">
+        <h2 class="forecast-title" id="forecast-heading">Pronóstico · próximos 10 días</h2>
+        <div class="forecast" id="forecast"></div>
       </section>
     </main>
   </div>
@@ -133,6 +144,7 @@
     try { city = JSON.parse(localStorage.getItem('office-city')) || defaultCity; } catch { city = defaultCity; }
     const el = id => document.getElementById(id);
     const weatherNames = { 0:'Despejado', 1:'Mayormente despejado', 2:'Parcialmente nublado', 3:'Nublado', 45:'Niebla', 48:'Niebla', 51:'Llovizna', 53:'Llovizna', 55:'Llovizna', 61:'Lluvia', 63:'Lluvia', 65:'Lluvia intensa', 71:'Nieve', 73:'Nieve', 75:'Nieve', 80:'Chaparrones', 81:'Chaparrones', 82:'Chaparrones fuertes', 95:'Tormenta', 96:'Tormenta', 99:'Tormenta' };
+    const weatherSymbol = code => code >= 95 ? '⚡' : code >= 71 && code <= 75 ? '❄' : code >= 51 && code <= 82 ? '☂' : code >= 45 ? '☁' : code >= 2 ? '☁' : code === 1 ? '◐' : '☀';
     const formatTime = (date, zone) => new Intl.DateTimeFormat('es-AR', {timeZone:zone, hour:'2-digit', minute:'2-digit', hourCycle:'h23'}).format(date);
     const formatDate = (date, zone) => new Intl.DateTimeFormat('es-AR', {timeZone:zone, weekday:'long', day:'numeric', month:'long'}).format(date);
     function renderTime() {
@@ -161,7 +173,7 @@
     async function renderWeather() {
       const currentCity = city;
       const url = new URL('https://api.open-meteo.com/v1/forecast');
-      url.search = new URLSearchParams({ latitude:city.latitude, longitude:city.longitude, current:'temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m', daily:'temperature_2m_max,temperature_2m_min,weather_code', temperature_unit:'celsius', wind_speed_unit:'kmh', timezone:city.timezone, forecast_days:'3' });
+      url.search = new URLSearchParams({ latitude:city.latitude, longitude:city.longitude, current:'temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m', daily:'temperature_2m_max,temperature_2m_min,weather_code,precipitation_probability_max', temperature_unit:'celsius', wind_speed_unit:'kmh', timezone:city.timezone, forecast_days:'10' });
       el('status').textContent = 'Actualizando…';
       try {
         const response = await fetch(url, {cache:'no-store'});
@@ -176,9 +188,16 @@
         el('forecast').replaceChildren(...data.daily.time.map((date, index) => {
           const day=document.createElement('div'); day.className='day';
           const name=document.createElement('div'); name.className='day-name';
-          name.textContent = index === 0 ? 'Hoy' : new Intl.DateTimeFormat('es-AR',{weekday:'long',timeZone:city.timezone}).format(new Date(date+'T12:00:00'));
+          name.textContent = index === 0 ? 'Hoy' : new Intl.DateTimeFormat('es-AR',{weekday:'short',day:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
+          const middle=document.createElement('div'); middle.className='day-middle';
+          const symbol=document.createElement('span'); symbol.className='day-symbol'; symbol.textContent=weatherSymbol(data.daily.weather_code[index]);
+          const rain=document.createElement('span');
+          const chance=data.daily.precipitation_probability_max?.[index];
+          rain.textContent=chance == null ? 'Lluvia —' : `Lluvia ${Math.round(chance)}%`;
+          middle.append(symbol,rain);
           const temp=document.createElement('div'); temp.className='day-temp'; temp.textContent=`${Math.round(data.daily.temperature_2m_max[index])}° / ${Math.round(data.daily.temperature_2m_min[index])}°`;
-          day.append(name,temp); return day;
+          day.title=weatherNames[data.daily.weather_code[index]] || 'Estado variable';
+          day.append(name,middle,temp); return day;
         }));
         el('status').textContent = `Actualizado ${formatTime(new Date(), city.timezone)} · Open-Meteo`;
       } catch {
