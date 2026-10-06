@@ -19,7 +19,7 @@
     h1 { margin: 0; font-size: clamp(44px, 4.5vw, 86px); line-height: 1.05; font-weight: 650; letter-spacing: -.05em; }
     .date { margin-top: 16px; font-size: clamp(21px, 1.8vw, 32px); color: #b8cbd0; }
     .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
-    .action { border: 1px solid #446473; background: #183342; color: white; padding: 15px 20px; border-radius: 16px; min-height: 52px; font-size: clamp(16px, 1.1vw, 21px); }
+    .action { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #446473; background: #183342; color: white; padding: 15px 20px; border-radius: 16px; min-height: 52px; font-size: clamp(16px, 1.1vw, 21px); text-decoration: none; }
     .action:focus-visible, .city-result:focus-visible { outline: 4px solid #81e7d3; outline-offset: 3px; }
     main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 28px; flex: 1; }
     .card { background: rgba(17, 40, 53, .78); border: 1px solid #345565; border-radius: 30px; padding: clamp(28px, 2.5vw, 48px); box-shadow: 0 18px 55px rgba(0,0,0,.16); }
@@ -101,6 +101,7 @@
         <div class="date" id="local-date">&nbsp;</div>
       </div>
       <div class="actions">
+        <a class="action" href="motivacion://azar">Video sorpresa</a>
         <button class="action" id="change-city">Cambiar ciudad</button>
         <button class="action" id="fullscreen">Pantalla completa</button>
       </div>
