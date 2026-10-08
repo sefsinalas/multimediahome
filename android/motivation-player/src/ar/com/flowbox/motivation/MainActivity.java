@@ -2,19 +2,24 @@ package ar.com.flowbox.motivation;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.Intent;
+import android.content.ContentUris;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends Activity {
+  private static final String TAG = "VideoSorpresa";
   static final String FOLDER = "MOTIVATION";
   private static final int READ_REQUEST = 1;
 
@@ -50,45 +56,77 @@ public class MainActivity extends Activity {
   }
 
   private void playRandom() {
-    List<File> files = new ArrayList<>();
-    collect(videoFolder(), files, 0);
-    if (files.isEmpty()) {
-      showMessage("Todavía no hay videos en Movies/MOTIVATION. Sincronizá esa carpeta con Round Sync.");
+    List<Video> videos = indexedVideos();
+    if (videos.isEmpty()) {
+      showMessage("Todavía no hay videos disponibles en Movies/MOTIVATION. Sincronizá esa carpeta con Round Sync.");
       return;
     }
     String last = getPreferences(MODE_PRIVATE).getString("last", "");
-    if (files.size() > 1) {
-      for (int i = files.size() - 1; i >= 0; i--) {
-        if (files.get(i).getAbsolutePath().equals(last)) files.remove(i);
+    if (videos.size() > 1) {
+      for (int i = videos.size() - 1; i >= 0; i--) {
+        if (videos.get(i).path.equals(last)) videos.remove(i);
       }
     }
-    File chosen = files.get(ThreadLocalRandom.current().nextInt(files.size()));
-    String relativePath = chosen.getAbsolutePath().substring(videoFolder().getAbsolutePath().length() + 1);
-    Uri uri = Uri.parse("content://ar.com.flowbox.motivation.files/video/" + Uri.encode(relativePath));
-    Intent play = new Intent(Intent.ACTION_VIEW);
-    play.setDataAndType(uri, "video/*");
-    play.setPackage("org.videolan.vlc");
-    play.setClipData(ClipData.newUri(getContentResolver(), "Video sorpresa", uri));
-    play.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-    try {
-      startActivity(play);
-      getPreferences(MODE_PRIVATE).edit().putString("last", chosen.getAbsolutePath()).apply();
-      finish();
-    } catch (ActivityNotFoundException e) {
-      showMessage("No se encontró VLC para reproducir el video.");
-    }
+    Video chosen = videos.get(ThreadLocalRandom.current().nextInt(videos.size()));
+    Log.i(TAG, "Selected " + chosen.path + " from " + videos.size() + " indexed videos");
+    Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, chosen.id);
+    VideoView player = new VideoView(this);
+    long startedAt = SystemClock.elapsedRealtime();
+    player.setKeepScreenOn(true);
+    MediaController controls = new MediaController(this);
+    controls.setAnchorView(player);
+    player.setMediaController(controls);
+    player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+      @Override public void onPrepared(MediaPlayer mediaPlayer) {
+        Log.i(TAG, "Prepared, duration=" + mediaPlayer.getDuration() + "ms");
+        player.start();
+      }
+    });
+    player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+      @Override public void onCompletion(MediaPlayer mediaPlayer) {
+        Log.i(TAG, "Completed after " + (SystemClock.elapsedRealtime() - startedAt) + "ms");
+        finish();
+      }
+    });
+    player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+      @Override public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        Log.e(TAG, "Playback error " + what + "/" + extra);
+        showMessage("No se pudo reproducir este video. Probá con otro.");
+        return true;
+      }
+    });
+    setContentView(player);
+    player.setVideoURI(uri);
+    getPreferences(MODE_PRIVATE).edit().putString("last", chosen.path).apply();
   }
 
-  private void collect(File folder, List<File> result, int depth) {
-    if (depth > 5) return;
-    File[] children = folder.listFiles();
-    if (children == null) return;
-    for (File file : children) {
-      if (file.isDirectory()) collect(file, result, depth + 1);
-      else if (file.isFile()) {
-        String name = file.getName().toLowerCase(Locale.ROOT);
-        if (name.endsWith(".mp4") || name.endsWith(".mkv") || name.endsWith(".webm") || name.endsWith(".mov") || name.endsWith(".avi")) result.add(file);
+  private List<Video> indexedVideos() {
+    List<Video> videos = new ArrayList<>();
+    String root = videoFolder().getAbsolutePath() + File.separator;
+    String[] columns = {MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA};
+    try (Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+        columns, MediaStore.Video.Media.DATA + " LIKE ?", new String[]{root + "%"}, null)) {
+      if (cursor == null) return videos;
+      while (cursor.moveToNext()) {
+        String path = cursor.getString(1);
+        if (path == null || !path.startsWith(root) || !new File(path).isFile()) continue;
+        String name = path.toLowerCase(Locale.ROOT);
+        if (name.endsWith(".mp4") || name.endsWith(".mkv") || name.endsWith(".webm")
+            || name.endsWith(".mov") || name.endsWith(".avi")) {
+          videos.add(new Video(cursor.getLong(0), path));
+        }
       }
+    }
+    return videos;
+  }
+
+  private static class Video {
+    final long id;
+    final String path;
+
+    Video(long id, String path) {
+      this.id = id;
+      this.path = path;
     }
   }
 
