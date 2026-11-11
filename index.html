@@ -11,16 +11,11 @@
     :root { color-scheme: dark; font-family: system-ui, -apple-system, sans-serif; background: #08151e; color: #f5f7f6; }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 80% 8%, #163b49 0, transparent 35%), linear-gradient(145deg, #091b27, #07141d 70%); }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
     .shell { min-height: 100vh; max-width: 1920px; margin: auto; padding: clamp(24px, 3.4vw, 64px); display: flex; flex-direction: column; gap: clamp(32px, 4vh, 52px); }
     header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
     .eyebrow { margin: 0 0 12px; color: #8bdccf; font-size: clamp(17px, 1.3vw, 23px); font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
     h1 { margin: 0; font-size: clamp(44px, 4.5vw, 86px); line-height: 1.05; font-weight: 650; letter-spacing: -.05em; }
     .date { margin-top: 16px; font-size: clamp(21px, 1.8vw, 32px); color: #b8cbd0; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
-    .action { display: inline-flex; align-items: center; justify-content: center; border: 1px solid #446473; background: #183342; color: white; padding: 15px 20px; border-radius: 16px; min-height: 52px; font-size: clamp(16px, 1.1vw, 21px); text-decoration: none; }
-    .action:focus-visible, .city-result:focus-visible { outline: 4px solid #81e7d3; outline-offset: 3px; }
     main { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 28px; flex: 1; }
     .card { background: rgba(17, 40, 53, .78); border: 1px solid #345565; border-radius: 30px; padding: clamp(28px, 2.5vw, 48px); box-shadow: 0 18px 55px rgba(0,0,0,.16); }
     .section-title { margin: 0; color: #a6c5cb; font-size: clamp(20px, 1.35vw, 26px); font-weight: 600; }
@@ -48,21 +43,12 @@
     .clock-time { font-size: clamp(39px, 3.8vw, 72px); line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; font-weight: 650; white-space: nowrap; }
     .hint { margin-top: auto; padding-top: 12px; color: #8faeb7; font-size: clamp(16px, 1.1vw, 20px); line-height: 1.4; }
     .status { min-height: 26px; color: #9cb8be; font-size: clamp(15px, 1vw, 19px); }
-    dialog { color: white; background: #14303e; border: 1px solid #527985; border-radius: 24px; width: min(620px, calc(100vw - 36px)); padding: 28px; box-shadow: 0 30px 100px #0009; }
-    dialog::backdrop { background: #000b; }
-    dialog h2 { margin: 0 0 18px; font-size: 30px; }
-    dialog label { display: block; margin-bottom: 10px; font-size: 18px; }
-    dialog input { width: 100%; border: 1px solid #70939b; background: #071d29; color: white; border-radius: 12px; padding: 15px; font-size: 21px; }
-    .results { display: grid; gap: 8px; margin-top: 16px; max-height: 330px; overflow-y: auto; }
-    .city-result { text-align: left; color: white; background: #205061; border: 1px solid #487281; border-radius: 12px; padding: 13px 16px; font-size: 19px; }
-    .dialog-actions { display: flex; justify-content: flex-end; margin-top: 22px; }
     @media (min-width: 721px) and (max-height: 700px) {
       .shell { height: 100vh; min-height: 0; padding: 18px 22px; gap: 14px; }
       header { align-items: center; }
       .eyebrow { margin-bottom: 3px; font-size: 13px; }
       h1 { font-size: 43px; }
       .date { margin-top: 4px; font-size: 17px; }
-      .action { min-height: 38px; padding: 7px 12px; border-radius: 10px; font-size: 14px; }
       main { min-height: 0; gap: 14px; }
       .card { min-height: 0; padding: 18px; border-radius: 18px; }
       main { grid-template-rows: minmax(0, .49fr) minmax(0, .51fr); }
@@ -89,7 +75,7 @@
       .hint { display: none; }
     }
     @media (max-width: 720px) { main { grid-template-columns: 1fr; } .forecast-card { grid-column: 1; } .shell { min-height: 100svh; } .clocks { min-height: 420px; } }
-    @media (max-width: 650px) { header { flex-direction: column; } .actions { justify-content: flex-start; } .weather-main { flex-direction: column; align-items: flex-start; gap: 4px; } .clock { align-items: flex-start; flex-direction: column; } .forecast { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 650px) { header { flex-direction: column; } .weather-main { flex-direction: column; align-items: flex-start; gap: 4px; } .clock { align-items: flex-start; flex-direction: column; } .forecast { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   </style>
 </head>
 <body>
@@ -99,11 +85,6 @@
         <p class="eyebrow">Tu oficina</p>
         <h1 id="city-title">Salta</h1>
         <div class="date" id="local-date">&nbsp;</div>
-      </div>
-      <div class="actions">
-        <a class="action" href="motivacion://azar">Video sorpresa</a>
-        <button class="action" id="change-city">Cambiar ciudad</button>
-        <button class="action" id="fullscreen">Pantalla completa</button>
       </div>
     </header>
     <main>
@@ -124,7 +105,7 @@
           <h2 class="section-title" id="clocks-heading">Horas del mundo</h2>
           <div class="clock-list" id="clock-list"></div>
         </div>
-        <p class="hint">Cancún y EST comparten reloj. Pulsá Home en el control para abrir tus aplicaciones.</p>
+        <p class="hint">Pulsá 0 para ver un video sorpresa. Pulsá Home para abrir tus aplicaciones.</p>
       </section>
       <section class="card forecast-card" aria-labelledby="forecast-heading">
         <h2 class="forecast-title" id="forecast-heading">Pronóstico · próximos 10 días</h2>
@@ -132,13 +113,6 @@
       </section>
     </main>
   </div>
-  <dialog id="city-dialog">
-    <h2>Cambiar ciudad</h2>
-    <label for="city-search">Buscá tu ciudad para el clima</label>
-    <input id="city-search" autocomplete="off" placeholder="Ciudad, provincia o país">
-    <div class="results" id="city-results"></div>
-    <div class="dialog-actions"><button class="action" id="close-city">Cerrar</button></div>
-  </dialog>
   <script>
     const defaultCity = { name: 'Salta', country: 'Argentina', latitude: -24.7859, longitude: -65.4117, timezone: 'America/Argentina/Salta' };
     let city;
@@ -207,34 +181,6 @@
         el('status').textContent = 'Reintentaremos automáticamente.';
       }
     }
-    el('change-city').addEventListener('click', () => { el('city-dialog').showModal(); el('city-search').focus(); });
-    el('close-city').addEventListener('click', () => el('city-dialog').close());
-    el('fullscreen').addEventListener('click', () => document.documentElement.requestFullscreen?.());
-    let searchTimer;
-    el('city-search').addEventListener('input', () => {
-      clearTimeout(searchTimer);
-      const name = el('city-search').value.trim();
-      if (name.length < 2) { el('city-results').textContent=''; return; }
-      searchTimer=setTimeout(async () => {
-        el('city-results').textContent='Buscando…';
-        try {
-          const response=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(name)}&count=5&language=es`);
-          const data=await response.json();
-          if (el('city-search').value.trim() !== name) return;
-          el('city-results').replaceChildren(...(data.results || []).map(result => {
-            const button=document.createElement('button'); button.className='city-result';
-            button.textContent=[result.name,result.admin1,result.country].filter(Boolean).join(', ');
-            button.addEventListener('click', () => {
-              city={name:result.name,country:result.country,latitude:result.latitude,longitude:result.longitude,timezone:result.timezone};
-              localStorage.setItem('office-city',JSON.stringify(city));
-              el('city-dialog').close(); renderTime(); renderWeather();
-            });
-            return button;
-          }));
-          if (!data.results?.length) el('city-results').textContent='No encontré esa ciudad.';
-        } catch { el('city-results').textContent='No se pudo buscar. Probá de nuevo.'; }
-      },400);
-    });
     renderTime(); renderWeather();
     setInterval(renderTime, 15000);
     setInterval(renderWeather, 15*60*1000);

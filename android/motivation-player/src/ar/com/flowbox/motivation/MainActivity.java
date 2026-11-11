@@ -13,8 +13,10 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -31,6 +33,8 @@ public class MainActivity extends Activity {
   private static final String TAG = "VideoSorpresa";
   static final String FOLDER = "MOTIVATION";
   private static final int READ_REQUEST = 1;
+  private WebView panel;
+  private boolean playing;
 
   static File videoFolder() {
     return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), FOLDER);
@@ -39,11 +43,40 @@ public class MainActivity extends Activity {
   @Override public void onCreate(Bundle state) {
     super.onCreate(state);
     getWindow().getDecorView().setBackgroundColor(Color.rgb(8, 21, 30));
+    panel = new WebView(this);
+    panel.getSettings().setJavaScriptEnabled(true);
+    panel.getSettings().setDomStorageEnabled(true);
+    setContentView(panel);
+    panel.loadUrl("https://spiffy-haupia-f78515.netlify.app/");
+  }
+
+  @Override public boolean dispatchKeyEvent(KeyEvent event) {
+    if (panel != null && !playing && event.getKeyCode() == KeyEvent.KEYCODE_0) {
+      if (event.getAction() == KeyEvent.ACTION_UP) startRandom();
+      return true;
+    }
+    return super.dispatchKeyEvent(event);
+  }
+
+  @Override public void onBackPressed() {
+    if (panel != null && playing) {
+      showPanel();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  private void startRandom() {
     if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
       requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_REQUEST);
     } else {
       playRandom();
     }
+  }
+
+  private void showPanel() {
+    playing = false;
+    setContentView(panel);
   }
 
   @Override public void onRequestPermissionsResult(int request, String[] permissions, int[] results) {
@@ -71,6 +104,7 @@ public class MainActivity extends Activity {
     Log.i(TAG, "Selected " + chosen.path + " from " + videos.size() + " indexed videos");
     Uri uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, chosen.id);
     VideoView player = new VideoView(this);
+    playing = true;
     long startedAt = SystemClock.elapsedRealtime();
     player.setKeepScreenOn(true);
     MediaController controls = new MediaController(this);
@@ -85,7 +119,7 @@ public class MainActivity extends Activity {
     player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
       @Override public void onCompletion(MediaPlayer mediaPlayer) {
         Log.i(TAG, "Completed after " + (SystemClock.elapsedRealtime() - startedAt) + "ms");
-        finish();
+        showPanel();
       }
     });
     player.setOnErrorListener(new MediaPlayer.OnErrorListener() {

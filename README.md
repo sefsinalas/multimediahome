@@ -1,6 +1,6 @@
 # Panel de oficina
 
-Panel de pantalla completa para el FlowBox: clima actual y pronóstico, más relojes de Cancún, EST y Ciudad de México. Los relojes que coinciden se agrupan en una sola hora. La ciudad del clima se puede cambiar desde el panel y queda guardada en ese navegador.
+Panel de pantalla completa para el FlowBox: clima actual y pronóstico, más relojes de Cancún, EST y Ciudad de México. Los relojes que coinciden se agrupan en una sola hora. En la app Android del panel, la tecla 0 del control reproduce un video sorpresa local y vuelve al panel cuando termina.
 
 ## Publicar en Netlify
 
